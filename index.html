@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -566,7 +567,9 @@ function setupFab(id){
   fab.style.display='flex';
   if(id==='dash'){fab.style.display='none';return;}
   if(id==='caja'){fab.style.display='none';return;}
-  if(id==='mov'){fab.onclick=()=>{selType('income');openOv('ovMov');};}
+  if(id==='mov'){fab.onclick=()=>{selType('income');  openOv('ovMov');
+  // forzar estado inicial del modal
+  selType('income');};}
   if(id==='prod'){fab.onclick=()=>openProdModal(null);}
   if(id==='ins'){fab.onclick=()=>openInsModal(null);}
 }
@@ -705,17 +708,22 @@ function setFilt(f,chip){
 // ── TIPO Y PAGO ──
 function selType(t){
   curType=t;
-  ['income','expense','supply'].forEach(tp=>{
-    document.getElementById('t'+tp.charAt(0).toUpperCase()+tp.slice(1)).className='tbtn';
-  });
-  const cls={income:'si',expense:'se',supply:'ss'};
-  document.getElementById({income:'tInc',expense:'tExp',supply:'tSup'}[t]).className='tbtn '+cls[t];
+  document.getElementById('tInc').className='tbtn';
+  document.getElementById('tExp').className='tbtn';
+  document.getElementById('tSup').className='tbtn';
+  if(t==='income') document.getElementById('tInc').className='tbtn si';
+  if(t==='expense') document.getElementById('tExp').className='tbtn se';
+  if(t==='supply') document.getElementById('tSup').className='tbtn ss';
   const cats=CATS[t];
   const sel=document.getElementById('fCat');
   sel.innerHTML='<option value="">Seleccioná...</option>'+cats.map(c=>`<option>${c}</option>`).join('');
   document.getElementById('fQtyGrp').style.display=t==='supply'?'block':'none';
   document.getElementById('pagoGrp').style.display=t==='income'?'block':'none';
   document.getElementById('fDate').value=new Date().toISOString().split('T')[0];
+  // resetear método de pago siempre que se abre
+  curPago='efectivo';
+  document.getElementById('pagoEf').className='pago-btn sel-ef';
+  document.getElementById('pagoTr').className='pago-btn';
 }
 function selPago(p){
   curPago=p;
